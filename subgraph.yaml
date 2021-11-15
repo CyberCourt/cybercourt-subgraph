@@ -1,0 +1,178 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Entrance
+    network: matic
+    source:
+      address: "0x6F81041432d9bCfEb23cc20a3D1B902b9fE059D7"
+      abi: Entrance
+      startBlock: 20565052
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - OwnershipTransferred
+        - addContractEvent
+        - addStakeEvent
+        - applyExitEvent
+        - applyJudgeEvent
+        - assignJudgerEvent
+        - createKindleEvent
+        - createMainContractEvent
+        - exitStakeEvent
+        - finishConProposalEvent
+        - finishContractSignEvent
+        - finishExitEvent
+        - finishJudgerProposalEvent
+        - launchJudgerProposalEvent
+        - launchProposalEvent
+        - signContractEvent
+        - signJudgerProposalEvent
+        - signProposalEvent
+      abis:
+        - name: Entrance
+          file: ./abis/Entrance.json
+        - name: MainContract
+          file: ./abis/MainContract.json
+      eventHandlers:
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: addContractEvent(indexed address,address,uint256,uint8,string)
+          handler: handleaddContractEvent
+        - event: addStakeEvent(indexed address,address,uint256,uint256)
+          handler: handleaddStakeEvent
+        - event: applyExitEvent(indexed address,address,uint256)
+          handler: handleapplyExitEvent
+        - event: applyJudgeEvent(indexed address,address,uint256,address[])
+          handler: handleapplyJudgeEvent
+        - event: createKindleEvent(indexed address,indexed address,address)
+          handler: handlecreateKindleEvent
+        - event: createMainContractEvent(indexed address,address,address,uint256,string)
+          handler: handlecreateMainContractEvent
+        - event: exitStakeEvent(indexed address,address,uint256,uint256)
+          handler: handleexitStakeEvent
+        - event: finishConProposalEvent(address,uint256,uint256)
+          handler: handlefinishConProposalEvent
+        - event: finishContractSignEvent(address,uint256,uint8)
+          handler: handlefinishContractSignEvent
+        - event: finishExitEvent(address,uint256)
+          handler: handlefinishExitEvent
+        - event: finishJudgerProposalEvent(indexed address,address,uint256,uint256)
+          handler: handlefinishJudgerProposalEvent
+        - event: launchJudgerProposalEvent(indexed address,address,uint256,uint256)
+          handler: handlelaunchJudgerProposalEvent
+        - event: launchProposalEvent(indexed address,address,uint256,uint256)
+          handler: handlelaunchProposalEvent
+        - event: signContractEvent(indexed address,address,uint256,uint8,int8)
+          handler: handlesignContractEvent
+        - event: signJudgerProposalEvent(indexed address,address,uint256,uint256,int8)
+          handler: handlesignJudgerProposalEvent
+        - event: signProposalEvent(indexed address,address,uint256,uint256,int8)
+          handler: handlesignProposalEvent
+        - event: setTokenFaucetEvent(indexed address,indexed address)
+          handler: handlesetTokenFaucetEvent
+      file: ./src/mapping.ts
+templates:
+  - kind: ethereum/contract
+    name: JudgerOrg
+    network: matic
+    source:
+      abi: JudgerOrg
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - DelegateChanged
+        - DelegateVotesChanged
+        - OwnerChanged
+        - Transfer
+        - assignJudgerEvent
+        - finishEvent
+        - setAssignJudgerNumEvent
+        - setContactEvent
+        - setIdleStatusEvent
+        - setMaxCaseNumEvent
+        - setNameEvent
+        - setRateMantissaEvent
+        - setRemarkEvent
+        - setUrlEvent
+        - setWhiteJudgerEvent
+        - transferERC20Event
+        - setTimesEvent
+        - setAcceptTokenEvent
+      abis:
+        - name: JudgerOrg
+          file: ./abis/JudgerOrg.json
+      eventHandlers:
+        - event: DelegateChanged(indexed address,indexed address,indexed address)
+          handler: handleDelegateChanged
+        - event: DelegateVotesChanged(indexed address,uint256,uint256)
+          handler: handleDelegateVotesChanged
+        - event: OwnerChanged(address,address)
+          handler: handleOwnerChanged
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: assignJudgerEvent(indexed address)
+          handler: handleassignJudgerEvent
+        - event: finishEvent(indexed address)
+          handler: handlefinishEvent
+        - event: setAssignJudgerNumEvent(uint8)
+          handler: handlesetAssignJudgerNumEvent
+        - event: setContactEvent(string)
+          handler: handlesetContactEvent
+        - event: setIdleStatusEvent(indexed address,bool)
+          handler: handlesetIdleStatusEvent
+        - event: setMaxCaseNumEvent(uint8)
+          handler: handlesetMaxCaseNumEvent
+        - event: setNameEvent(string)
+          handler: handlesetNameEvent
+        - event: setRateMantissaEvent(uint256)
+          handler: handlesetRateMantissaEvent
+        - event: setRemarkEvent(string)
+          handler: handlesetRemarkEvent
+        - event: setUrlEvent(string)
+          handler: handlesetUrlEvent
+        - event: setWhiteJudgerEvent(indexed address,uint256)
+          handler: handlesetWhiteJudgerEvent
+        - event: setTimesEvent(uint256,uint256)
+          handler: handlesetTimesEvent
+        - event: transferERC20Event(indexed address,indexed address,uint256)
+          handler: handletransferERC20Event
+        - event: setAcceptTokenEvent(indexed address,bool,uint256)
+          handler: handlesetAcceptTokenEvent
+      file: ./src/judgerOrg.ts
+  - kind: ethereum/contract
+    name: GovernorAlpha
+    network: matic
+    source:
+      abi: GovernorAlpha
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - ProposalCanceled
+        - ProposalCreated
+        - ProposalExecuted
+        - ProposalQueued
+        - VoteCast
+      abis:
+        - name: GovernorAlpha
+          file: ./abis/GovernorAlpha.json
+      eventHandlers:
+        - event: ProposalCanceled(uint256)
+          handler: handleProposalCanceled
+        - event: ProposalCreated(uint256,address,address[],uint256[],string[],bytes[],uint256,uint256,string)
+          handler: handleProposalCreated
+        - event: ProposalExecuted(uint256)
+          handler: handleProposalExecuted
+        - event: ProposalQueued(uint256,uint256)
+          handler: handleProposalQueued
+        - event: VoteCast(address,uint256,bool,uint256)
+          handler: handleVoteCast
+      file: ./src/governorAlpha.ts
+

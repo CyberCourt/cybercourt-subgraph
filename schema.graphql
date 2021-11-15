@@ -1,0 +1,165 @@
+
+type MainContract @entity {
+  id: ID!
+  mainContractAddr: Bytes! # address
+  judgerOrgAddr: Bytes! # address
+  mainContractOrder: BigInt!
+  startBlockTime:BigInt!
+  endBlockTime:BigInt!
+  applyExitBlockTime:BigInt!
+  applyJudgeBlockTime:BigInt!
+  exitWaitPeriodTime:BigInt!
+  controlledToken: Bytes!
+  limitJudgePeriodTime:BigInt!
+  succJudgeProposalOrder:BigInt!
+  succConPersonProposalOrder:BigInt!
+  totalStake:BigInt!
+  status: Int!
+  token:Bytes! # address
+  
+  contracts: [Contract!]  @derivedFrom(field: "mainContract")
+  persons: [MainContractPerson!] @derivedFrom(field: "mainContract")
+  judgers: [MainContractJudger!] @derivedFrom(field: "mainContract")
+  proposals: [Proposal!]  @derivedFrom(field: "mainContract")
+  judgeProposals: [JudgeProposal!]  @derivedFrom(field: "mainContract")
+}
+
+type Token @entity {
+  id: ID! 
+  controlledToken: Bytes! # address
+  tokenFaucet:  Bytes! # address
+}
+type MainContractPerson @entity {
+  id: ID! 
+  person: Person!
+  mainContract: MainContract!
+  balance: BigInt!
+}
+type Contract @entity {
+  id: ID!
+  startBlockTime: BigInt!
+  contentOrIpfsHash: String!
+  judgerOrgAddr: Bytes! # address
+  mainContract: MainContract!
+  mainContractOrder: BigInt!
+  contractOrder: Int!
+  persons: [ContractPerson!] @derivedFrom(field: "contract")
+}
+type ContractPerson @entity {
+  id: ID! 
+  person: Person!
+  contract: Contract!
+  signStatus: Int!
+}
+type AssignPlan @entity {
+  id: ID! 
+  person: Person!
+  balance: BigInt!
+  proposal: Proposal!
+}
+type ProposalPerson @entity {
+  id: ID! 
+  person: Person!
+  proposal: Proposal!
+  signStatus: Int!
+}
+type Proposal @entity {
+  id: ID!
+  #startBlockTime: Bytes! # address
+  judgerOrgAddr: Bytes! # address
+  mainContractOrder: BigInt!
+  proposalOrder: BigInt!
+  mainContract: MainContract!
+  # proposer: Bytes! # address
+  # agreeNum: Int
+  # rejectNum: Int
+  # assignPlans: [AssignPlan!] @derivedFrom(field: "proposal")
+}
+type Person @entity {
+  id: ID!
+  #mainContracts: [MainContract!]
+  mainContracts:[MainContractPerson!] @derivedFrom(field: "person")
+  contracts: [ContractPerson!] @derivedFrom(field: "person")
+  proposals: [ProposalPerson!] @derivedFrom(field: "person")
+}
+type MainContractJudger @entity {
+  id: ID! 
+  judger: Judger!
+  mainContract: MainContract!
+  status:Int!
+}
+type ProposalJudger @entity {
+  id: ID! 
+  judger: Judger!
+  proposal: JudgeProposal!
+  signStatus: Int!
+}
+
+type JudgeAssignPlan @entity {
+  id: ID! 
+  person: Person!
+  balance: BigInt!
+  proposal: JudgeProposal!
+}
+type JudgeProposal @entity {
+  id: ID!
+  #startBlockTime: Bytes! # address
+  judgerOrgAddr: Bytes! # address
+  mainContractOrder: BigInt!
+  proposalOrder: BigInt!
+  mainContract: MainContract!
+  # proposer: Bytes! # address
+  # agreeNum: Int!
+  # rejectNum: Int!
+  # assignPlans: [JudgeAssignPlan!] @derivedFrom(field: "proposal")
+}
+type Judger @entity{
+  id: ID!
+  mainContracts: [MainContractJudger!] @derivedFrom(field: "judger")
+  proposals: [ProposalJudger!] @derivedFrom(field: "judger")
+  judgerOrgs: [JudgerOrgJudger!] @derivedFrom(field: "judger")
+}
+
+type JudgerOrgJudger @entity {
+  id: ID! 
+  judger: Judger!
+  judgerOrg: JudgerOrg!
+  status: BigInt!
+  idleStatus:Boolean!
+}
+type JudgerOrg @entity{
+  id: ID!
+  governorAlphaAddr: Bytes! # address
+  url:String
+  contact:String
+  name:String
+  assignJudgerNum:Int
+  rateMantissa:BigInt
+  limitJudgePeriodTime:BigInt
+  exitWaitPeriodTime:BigInt
+  remark:String
+  maxCaseNum:Int
+  governorProposals: [GovernorProposal!]  @derivedFrom(field: "judgerOrg")
+  judgers: [JudgerOrgJudger!]  @derivedFrom(field: "judgerOrg")
+}
+type GovernorProposal @entity{
+  id: ID!
+  order:BigInt!
+  proposer: Bytes! # address
+  targets:[Bytes!]
+  values:[BigInt!]
+  signatures:[String!]
+  calldatas:[Bytes!]
+  startBlock:BigInt
+  startBlockTime:BigInt
+  description:String
+  endBlock:BigInt
+  endBlockTime:BigInt
+  canceled:Boolean
+  executed:Boolean
+  eta:BigInt
+  judgerOrg:JudgerOrg!
+  forVotes:BigInt!
+  againstVotes:BigInt!
+  votesDiff:BigInt!
+}
